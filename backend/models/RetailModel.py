@@ -6,7 +6,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 
-class RetailPatner(Base):
+class RetailPartner(Base):
     __tablename__ = "retail_partners"
 
     id=Column(Integer, primary_key=True, index=True)
