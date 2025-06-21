@@ -1,0 +1,31 @@
+# --- Core FastAPI & Server ---
+fastapi
+uvicorn[standard] # ASGI server, [standard] includes httptools and websockets
+
+# --- Authentication & Security ---
+python-jose[cryptography]   # For JWT creation and decoding (includes cryptography backend)
+passlib[bcrypt]             # For password hashing (bcrypt is a strong algorithm)
+python-multipart
+
+# --- Database ORM & Migrations ---
+sqlalchemy                # The ORM toolkit
+# Choose your database driver below:
+psycopg2-binary           # For PostgreSQL (most common with FastAPI & SQLAlchemy)
+# mysqlclient             # For MySQL/MariaDB (uncomment if you use this)
+# python-sqlite3          # For SQLite (often built-in with Python, but good to be explicit if needed)
+# asyncpg                 # For asynchronous PostgreSQL (if you plan to use async DB operations)
+alembic                   # For database schema migrations
+
+# --- Data Validation & Settings Management ---
+pydantic                  # FastAPI dependency, used for data validation and models
+pydantic-settings         # For loading settings from .env files and environment variables
+python-dotenv             # To load .env files (often used by pydantic-settings)
+email-validator           # If you use Pydantic's EmailStr and want validation
+
+# --- (Optional) Development & Linting/Formatting ---
+# flake8                  # For linting
+# black                   # For code formatting
+# isort                   # For sorting imports
+# pytest                  # For running tests
+# pytest-cov              # For test coverage
+# httpx                   # For making async HTTP requests (useful for testing API endpoints)
