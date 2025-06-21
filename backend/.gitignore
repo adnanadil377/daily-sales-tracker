@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.env.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Pytest cache
+.pytest_cache/
+
+# MyPy cache
+.mypy_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# Logs and local runtime files
+*.log
+*.sqlite3
+instance/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# Dependency files
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyInstaller
+*.spec
+
+# IDEs
+.idea/
+
+# Docker
+*.pid
+
+# FastAPI specific
+*.db
