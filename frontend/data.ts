@@ -20,7 +20,6 @@ export interface RetailPartner {
 export interface User {
   id: number;
   name: string;
-  email: string;
   passwordHash: string;
   role: 'admin' | 'merchandiser';
   retailPartnerId: number | null;
@@ -42,9 +41,13 @@ export interface InventoryItem {
 }
 
 export interface DailySalesReport {
-  id: number;
+  Salesid: number;
+  data:DailySalesItem[];
   merchandiserId: number;
   retailPartnerId: number;
+  totalQuantity: number;
+  totalSales: number;
+  finalValue: number;
   reportDate: string; // ISO date string: "YYYY-MM-DD"
   status: 'submitted' | 'pending' | 'approved';
   notes: string;
@@ -52,11 +55,12 @@ export interface DailySalesReport {
 }
 
 export interface DailySalesItem {
-  reportId: number;
   productId: number;
+  productName: string;
   quantitySold: number;
-  unitPrice: number;
+  salesPrice: number;
   discountPercent: number;
+  finalPrice: number;
 }
 
 
@@ -101,7 +105,6 @@ const users: User[] = [
   {
     id: 1,
     name: 'Admin User',
-    email: 'admin@example.com',
     passwordHash: 'hashed_pw_admin',
     role: 'admin',
     retailPartnerId: null,
@@ -109,7 +112,6 @@ const users: User[] = [
   {
     id: 2,
     name: 'Ravi Merchandiser',
-    email: 'ravi@example.com',
     passwordHash: 'hashed_pw_ravi',
     role: 'merchandiser',
     retailPartnerId: 1,
@@ -161,11 +163,32 @@ const inventory: InventoryItem[] = [
   },
 ];
 
-const dailySalesReports: DailySalesReport[] = [
+export const dailySalesReports: DailySalesReport[] = [
   {
-    id: 1,
+    Salesid: 1,
+    data:[
+      {
+        productId: 1,
+        productName: 'Zantek Speaker',
+        quantitySold: 10,
+        salesPrice: 190.0,
+        discountPercent: 0,
+        finalPrice: 190.00
+      },
+      {
+        productId: 2,
+        productName: 'Projector',
+        quantitySold: 5,
+        salesPrice: 580.0,
+        discountPercent: 6.45,
+        finalPrice: 542.69
+      },
+    ],
     merchandiserId: 2,
     retailPartnerId: 1,
+    totalQuantity: 15,
+    totalSales: 770.00,
+    finalValue: 732.59,
     reportDate: '2025-06-20',
     status: 'submitted',
     notes: 'Sold well today.',
@@ -173,22 +196,22 @@ const dailySalesReports: DailySalesReport[] = [
   },
 ];
 
-const dailySalesItems: DailySalesItem[] = [
-  {
-    reportId: 1,
-    productId: 1,
-    quantitySold: 10,
-    unitPrice: 190.0,
-    discountPercent: 9.52,
-  },
-  {
-    reportId: 1,
-    productId: 2,
-    quantitySold: 5,
-    unitPrice: 580.0,
-    discountPercent: 6.45,
-  },
-];
+// const dailySalesItems: DailySalesItem[] = [
+//   {
+//     reportId: 1,
+//     productId: 1,
+//     quantitySold: 10,
+//     unitPrice: 190.0,
+//     discountPercent: 9.52,
+//   },
+//   {
+//     reportId: 1,
+//     productId: 2,
+//     quantitySold: 5,
+//     unitPrice: 580.0,
+//     discountPercent: 6.45,
+//   },
+// ];
 
 
 // -------------------
@@ -201,7 +224,6 @@ export const dummyData = {
   products,
   inventory,
   dailySalesReports,
-  dailySalesItems,
 };
 
 
