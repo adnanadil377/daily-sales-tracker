@@ -1,52 +1,111 @@
+# Python
+###################
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
+*.pyo
+*.pyd
 
-# Virtual environment
-venv/
-.env/
-.env.*
+# C extensions
+*.so
 
-# OS-specific files
-.DS_Store
-Thumbs.db
-
-# VS Code settings
-.vscode/
-
-# Pytest cache
-.pytest_cache/
-
-# MyPy cache
-.mypy_cache/
-
-# Coverage reports
-htmlcov/
-.coverage
-
-# Logs and local runtime files
-*.log
-*.sqlite3
-instance/
-
-# Python packaging
+# Distribution / packaging
 build/
 dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Dependency files
-pip-log.txt
-pip-delete-this-directory.txt
+# Virtual environments
+# If your venv is inside the 'backend' folder (e.g., backend/venv)
+venv/
+.venv/
+env/
+ENV/
+# If your venv is at the project root (DAILY-SALES/venv), and this .gitignore
+# is in the 'backend' folder, you might need:
+# ../venv/
+# ../.venv/
 
-# PyInstaller
-*.spec
+# Environment variables
+# IMPORTANT: Never commit .env files containing sensitive credentials!
+# Your .env.example file should be committed as a template.
+.env
 
-# IDEs
-.idea/
-
-# Docker
-*.pid
-
-# FastAPI specific
+# Databases (if you use local SQLite for development, for example)
+*.sqlite3
 *.db
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# IDE & Editor specific
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# JetBrains IDEs (PyCharm, IntelliJ, etc.)
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# Other editors
+*.swp
+*.swo
+*~
+
+# OS-specific files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Test & Coverage reports
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+nosetests.xml
+pytestdebug.log
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# mypy cache
+.mypy_cache/
+
+# pytype
+.pytype/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
