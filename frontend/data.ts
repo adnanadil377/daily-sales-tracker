@@ -249,6 +249,36 @@ export const dailySalesReports: DailySalesReport[] = [
     notes: 'Sold well today.',
     submittedAt: '2025-06-20T19:00:00Z',
   },
+  {
+    Salesid: 2,
+    data:[
+      {
+        productId: 1,
+        productName: 'Zantek Speaker',
+        quantitySold: 10,
+        salesPrice: 190.0,
+        discountPercent: 0,
+        finalPrice: 190.00
+      },
+      {
+        productId: 2,
+        productName: 'Projector',
+        quantitySold: 5,
+        salesPrice: 580.0,
+        discountPercent: 6.45,
+        finalPrice: 542.69
+      },
+    ],
+    merchandiserId: 2,
+    retailPartnerId: 1,
+    totalQuantity: 15,
+    totalSales: 770.00,
+    finalValue: 732.59,
+    reportDate: '2025-06-20',
+    status: 'submitted',
+    notes: 'Sold well today.',
+    submittedAt: '2025-06-20T19:00:00Z',
+  },
 ];
 
 // const dailySalesItems: DailySalesItem[] = [

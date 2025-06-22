@@ -30,9 +30,9 @@ const MobileInventoryCard = ({
     className="p-4 rounded-xl shadow shadow-red-500/10 bg-gradient-to-br from-white to-blue-50/30 transition hover:shadow-md cursor-pointer"
     onClick={() => onClick(item.retailPartnerId)}
   >
-    <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
+    <div className="grid grid-cols-2 items-center border-b border-gray-200 pb-2 mb-2">
       <h3 className="font-semibold text-gray-800 text-base">{item.storeName}</h3>
-      <div className="text-sm text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full font-medium">
+      <div className="text-sm text-center text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full font-medium">
         QTY: {item.totalQuantity}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Menu, X, Home, Folder, Settings, Box, ShoppingCart } from 'lucide-react'
+import { Menu, X, Home, Settings, Box, ShoppingCart, MessageCircleIcon, } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useClickOutside } from '../clickoutside/useClickOutside'
 import { NavLink } from 'react-router-dom'
@@ -21,23 +21,29 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   return (
     <>
       <button
-        className="md:hidden fixed top-4 left-4 p-2 rounded-md text-black z-[1001] bg-white"
+        className="md:hidden fixed top-4 left-4 p-2 rounded-md text-black z-[200] bg-white"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X size={24} />: <Menu size={24} />}
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 backdrop-blur-[1px] bg-opacity-50 z-[1000] md:hidden" />
+        <div className="fixed inset-0 backdrop-blur-[1px] bg-opacity-50 z-[200] md:hidden" />
       )}
 
       <div
         ref={sidebarRef}
-        className={`fixed top-0 left-0 h-full md:h-[90vh] w-64 bg-white/50 md:bg-white text-black transform transition-transform duration-300 ease-in-out z-[1001]
+        className={`fixed top-0 left-0 h-full md:h-[90vh] w-64 bg-white/50 md:bg-white text-black transform transition-transform duration-300 ease-in-out z-[200]
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
           md:translate-x-0 md:static md:block shadow-lg md:shadow-none`}
       >
         <nav className="p-6 mt-10 flex flex-col gap-4">
+          <SidebarItem
+            icon={<MessageCircleIcon size={20} />}
+            label="Threads"
+            href="/threads"
+            onClick={handleClose}
+          />
           <SidebarItem
             icon={<Home size={20} />}
             label="Home"
