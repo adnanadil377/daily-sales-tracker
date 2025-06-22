@@ -64,9 +64,12 @@ def create_user_merchandiser(user_data: CreateUserModel, db: Session = Depends(g
     user_exists = db.query(models.User).filter_by(name=user_data.username).first()
     if user_exists:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"User '{user_data.username}' already exists")
-    
+    retail=db.query(models.RetailPartner).filter_by(id=user_data.retail_partner_id).first()
+    print(retail.name)
     hashed_pass = bcrypt_context.hash(user_data.password)
-    new_user = models.User(name=user_data.username, password_hash=hashed_pass, retail_partner_id=None, role='merchandiser')
+    if not retail:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="retail partner not found")
+    new_user = models.User(name=user_data.username, password_hash=hashed_pass, role='merchandiser', retail_partner=retail)
     
     try:
         db.add(new_user)

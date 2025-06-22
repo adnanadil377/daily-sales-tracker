@@ -4,14 +4,16 @@ import Dashboard from "./pages/navigations/dashboard/Dashboard"
 import PageNotFound from "./pages/PageNotFound"
 import Inventory from "./pages/navigations/inventory/Inventory"
 import Units from "./pages/navigations/units/Units"
+import LoginPage from "./auth/LoginPage"
 
 function App() {
-
+  
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout/>}>
+            <Route path="/auth" element={<LoginPage />}/>
+          <Route element={<Layout/>}>
             <Route path="/" element={<Dashboard />}/>
             <Route path="/inventory" element={<Inventory />}/>
             <Route path="/units" element={<Units />}/>
