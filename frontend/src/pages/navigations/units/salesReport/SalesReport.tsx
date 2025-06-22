@@ -16,7 +16,7 @@ const SalesReport: React.FC = () => {
   const navigate = useNavigate();
 
 const handleRowClick = (report: DailySalesReport) => {
-  navigate(`/units/merchandiser/${partner.id}/sales/${report.Salesid}/dailysales`);
+  navigate(`/units/merchandiser/${id}/sales/${report.Salesid}/dailysales`);
 };
 
   if (!partner) {
