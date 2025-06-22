@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { User, LogOut, Settings } from 'lucide-react'
 import { useClickOutside } from '../clickoutside/useClickOutside'
+import useAuth from '@/auth/useAuth'
 
 interface HeaderProps {
   onMenuClick: () => void
@@ -11,6 +12,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useClickOutside(dropdownRef, () => setDropdownOpen(false))
+  const {logout} = useAuth()
+
+  const handleLogout = () => {
+    logout()
+  }
 
   return (
     <header className="bg-white shadow-lg text-black border-b py-4 px-6 sm:px-10">
@@ -53,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 Settings
               </button>
               <button className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                <LogOut size={16} className="mr-2" />
+                <LogOut size={16} className="mr-2" onClick={()=>handleLogout()}/>
                 Logout
               </button>
             </div>
