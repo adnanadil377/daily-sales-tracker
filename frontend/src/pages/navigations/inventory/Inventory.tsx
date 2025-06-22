@@ -1,4 +1,3 @@
-import React from "react";
 import PageContainer from "@/pages/components/pagecontainer/PageContainer";
 import { inventories } from "../../../../data";
 import { useNavigate } from "react-router-dom";
