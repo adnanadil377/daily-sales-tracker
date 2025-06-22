@@ -35,11 +35,25 @@ export interface Product {
 
 export interface InventoryItem {
   retailPartnerId: number;
-  productId: number;
-  quantity: number;
-  unitSellingPrice: number;
+  storeName: string;
+  totalQuantity: number;
+  totalValue: number;
 }
 
+export interface InventoryDetail {
+  productId: number;
+  productName: string;
+  category: string;
+  quantity: number;
+  unitSellingPrice: number;
+  totalValue: number;
+}
+
+export interface StoreInventory {
+  retailPartnerId: number;
+  storeName: string;
+  products: InventoryDetail[];
+}
 export interface DailySalesReport {
   Salesid: number;
   data:DailySalesItem[];
@@ -142,24 +156,65 @@ const products: Product[] = [
   },
 ];
 
-const inventory: InventoryItem[] = [
+export const inventories: InventoryItem[] = [
   {
     retailPartnerId: 1,
-    productId: 1,
-    quantity: 100,
-    unitSellingPrice: 210.0,
+    storeName: "Downtown Tech Store",
+    totalQuantity: 180,
+    totalValue: 75100,
   },
   {
-    retailPartnerId: 1,
-    productId: 2,
-    quantity: 50,
-    unitSellingPrice: 620.0,
+    retailPartnerId: 2,
+    storeName: "Gadget Hub",
+    totalQuantity: 90,
+    totalValue: 19350,
   },
+];
+
+export const InventoryDetailsByStore: StoreInventory[] = [
   {
     retailPartnerId: 1,
-    productId: 3,
-    quantity: 30,
-    unitSellingPrice: 770.0,
+    storeName: "Downtown Tech Store",
+    products: [
+      {
+        productId: 1,
+        productName: "Earphones",
+        category: "Audio",
+        quantity: 100,
+        unitSellingPrice: 210,
+        totalValue: 100 * 210,
+      },
+      {
+        productId: 2,
+        productName: "Powerbank 10000mAh",
+        category: "Battery",
+        quantity: 50,
+        unitSellingPrice: 620,
+        totalValue: 50 * 620,
+      },
+      {
+        productId: 3,
+        productName: "Wireless Earbuds",
+        category: "Audio",
+        quantity: 30,
+        unitSellingPrice: 770,
+        totalValue: 30 * 770,
+      },
+    ],
+  },
+  {
+    retailPartnerId: 2,
+    storeName: "Gadget Hub",
+    products: [
+      {
+        productId: 1,
+        productName: "Earphones",
+        category: "Audio",
+        quantity: 90,
+        unitSellingPrice: 215,
+        totalValue: 90 * 215,
+      },
+    ],
   },
 ];
 
@@ -222,7 +277,7 @@ export const dummyData = {
   retailPartners,
   users,
   products,
-  inventory,
+  inventories,
   dailySalesReports,
 };
 
