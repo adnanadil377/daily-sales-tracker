@@ -11,11 +11,11 @@ const ThreadCard: React.FC<Props> = ({ report, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white p-4 rounded-2xl border border-white/20 shadow-md shadow-red-500/10 hover:shadow-lg hover:shadow-red-300/20 transition cursor-pointer overflow-hidden"
+      className="bg-white p-4 rounded-2xl shadow-md shadow-red-500/10 hover:shadow-lg hover:shadow-red-300/20 transition cursor-pointer overflow-hidden"
     >
-      <div className="flex justify-between items-center border-b border-white/20 pb-2 mb-2">
-        <h3 className="font-bold text-blue-400/80 text-sm">Thread #{report.Salesid}</h3>
-        <span className="text-xs text-white/60">
+      <div className="flex justify-between items-center border-b border-gray-600/20 pb-2 mb-2">
+        <h3 className="font-bold text-gray-600 text-sm bg-blue-100 rounded-full px-2">Thread #{report.Salesid}</h3>
+        <span className="text-xs text-gray-500">
           {new Date(report.reportDate).toLocaleDateString("en-US", {
             year: "2-digit",
             month: "short",
