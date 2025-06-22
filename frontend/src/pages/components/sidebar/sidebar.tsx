@@ -21,7 +21,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   return (
     <>
       <button
-        className="md:hidden fixed top-4 left-4 p-2 rounded-md text-black z-[1001] bg-black"
+        className="md:hidden fixed top-4 left-4 p-2 rounded-md text-black z-[1001] bg-white"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X size={24} />: <Menu size={24} />}
