@@ -14,7 +14,7 @@ const Units: React.FC = () => {
     <PageContainer title="Retail Partner">
       <div className="p-4">
         <div className="flex py-2 rounded-xl mb-4">
-        <h2 className="text-lg font-extrabold text-neutral-800 tracking-tight border-l-2 border-green-500 bg-gradient-to-r from-gray-500/5 to-transparent rounded-lg py-2 pl-4">
+        <h2 className="text-lg font-semibold text-neutral-800 tracking-tight border-l-2 border-green-500 bg-gradient-to-r from-gray-500/5 to-transparent rounded-lg py-2 pl-4">
           All Partners {" "}
         <span className="">
           # {retailPartners.length}
