@@ -7,14 +7,16 @@ import Units from "./pages/navigations/units/Units"
 import SalesReport from "./pages/navigations/units/salesReport/SalesReport"
 import DailySales from "./pages/navigations/units/dailySales/DailySales"
 import StoreInventory from "./pages/navigations/inventory/storeInventory/StoreInventory"
+import LoginPage from "./auth/LoginPage"
 
 function App() {
-
+  
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout/>}>
+            <Route path="/auth" element={<LoginPage />}/>
+          <Route element={<Layout/>}>
             <Route path="/" element={<Dashboard />}/>
             <Route path="/inventory" element={<Inventory />}/>
             <Route path="/units" element={<Units />}/>
