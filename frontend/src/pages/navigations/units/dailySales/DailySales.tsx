@@ -26,7 +26,7 @@ const DailySalesPage: React.FC = () => {
     <PageContainer title={`Sales Report – ${formattedDate}`}>
       <div className="p-4 space-y-4">
         <div>
-          <h2 className="text-xl font-semibold border-l-2 pl-4 py-1 border-green-500 bg-gradient-to-r from-green-500/5 to-transparent rounded">
+          <h2 className="text-xl font-semibold border-l-2 pl-4 py-1 border-green-500 bg-gradient-to-r from-gray-500/5 to-transparent rounded">
             {partner.merchandiser}
           </h2>
           <p className="text-sm text-gray-600">{partner.store} – {partner.location}</p>
