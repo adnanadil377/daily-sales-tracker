@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Menu, User, LogOut, Settings } from 'lucide-react'
+import { User, LogOut, Settings } from 'lucide-react'
 import { useClickOutside } from '../clickoutside/useClickOutside'
 
 interface HeaderProps {
