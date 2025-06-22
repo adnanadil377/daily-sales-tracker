@@ -15,9 +15,13 @@ const SalesReport: React.FC = () => {
 
   const navigate = useNavigate();
 
-const handleRowClick = (report: DailySalesReport) => {
-  navigate(`/units/merchandiser/${id}/sales/${report.Salesid}/dailysales`);
-};
+  if (!partner) {
+    return <div className="p-4 text-red-600">No merchandiser found with ID: {id}</div>;
+  }
+
+  const handleRowClick = (report: DailySalesReport) => {
+    navigate(`/units/merchandiser/${partner.id}/sales/${report.Salesid}/dailysales`);
+  };
 
   if (!partner) {
     return <div className="p-4 text-red-600">No merchandiser found with ID: {id}</div>;
@@ -26,7 +30,7 @@ const handleRowClick = (report: DailySalesReport) => {
   return (
     <PageContainer title={`Sales Report #${partner.id}`}>
       <div className="p-4">
-        <h1 className="text-2xl border-l-2 pl-4 py-1 z-10 border-green-500 bg-gradient-to-r from-green-500/5 via-transparent to-transparent font-semibold rounded"> {partner.merchandiser}</h1>
+        <h1 className="text-2xl border-l-2 pl-4 py-1 z-10 border-green-500 bg-gradient-to-r from-gray-500/5 via-transparent to-transparent font-semibold rounded"> {partner.merchandiser}</h1>
         <p className="text-lg">
           <span className="text-xs">{partner.store}</span> –{" "}
           <span className="text-xs">{partner.location}</span>

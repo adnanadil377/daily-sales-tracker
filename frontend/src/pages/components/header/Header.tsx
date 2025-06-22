@@ -21,7 +21,6 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           className="md:hidden p-2 rounded hover:bg-amber-600"
           aria-label="Toggle sidebar menu"
         >
-          <Menu size={24} className="text-amber-100" />
         </button>
 
         {/* Title */}
