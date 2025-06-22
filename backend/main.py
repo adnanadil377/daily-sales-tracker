@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import auth.auth_api
 from api import api
 from api import sales_api
-from api import daily
 
 app = FastAPI(
     title="Daily Sales API",
