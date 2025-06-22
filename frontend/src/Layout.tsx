@@ -16,7 +16,7 @@ const Layout = () => {
   if (!isAuthenticated) {
     // Redirect them to the /authorize page (or /login directly),
     // saving the current location they were trying to go to.
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    // return <Navigate to="/auth" state={{ from: location }} replace />;
     // Or directly to login:
     // return <Navigate to="/login" state={{ from: location }} replace />;
   }

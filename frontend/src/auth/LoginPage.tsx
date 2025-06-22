@@ -51,7 +51,7 @@ const LoginPage = () => {
       {/* <Header /> */}
       <div className="bg-white shadow-2xl rounded-xl p-8 sm:p-12 max-w-md w-full">
         <div className="text-center mb-8">
-          <UserCircleIcon className="mx-auto h-16 w-16 text-indigo-500 mb-4" />
+          <UserCircleIcon className="mx-auto h-16 w-16 text-neutral-900 mb-4" />
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800">
             Welcome Back!
           </h1>
@@ -68,19 +68,19 @@ const LoginPage = () => {
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
             <input id="username" name="username" type="text" autoComplete="username" required value={username} onChange={(e) => setUsername(e.target.value)}
-              className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-shadow"
+              className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-300 sm:text-sm transition-shadow"
               placeholder="john123" />
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <div className="relative">
               <input id="password" name="password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-shadow"
+                className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 sm:text-sm transition-shadow"
                 placeholder="••••••••" />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 hover:text-gray-700"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 hover:text-gray-700 "
                 aria-label={showPassword ? "Hide password" : "Show password"}>
-                {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                {showPassword ? <EyeSlashIcon className="h-5 w-5 bg-red-800 " /> : <EyeIcon className="h-5 w-5" />}
               </button>
             </div>
           </div>
