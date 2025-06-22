@@ -147,6 +147,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         };
     }, [logout]);
 
+    useEffect(() => {
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === 'authToken') {
+                // Only update if the value is different
+                setToken(prev => (prev !== event.newValue ? event.newValue : prev));
+            }
+        };
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
+
     return (
         <AuthContext.Provider value={{ token, user, role, login, logout, loading, isAuthenticated: !!token, }}>
             {children}
