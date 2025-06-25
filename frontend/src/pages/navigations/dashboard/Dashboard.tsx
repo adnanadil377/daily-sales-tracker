@@ -4,9 +4,7 @@ import PageContainer from '@/pages/components/pagecontainer/PageContainer'
 
 const Dashboard = () => {
   return (
-   <PageContainer title="Dashboard">
-       <ComingSoon/>
-   </PageContainer>
+       <ComingSoon title="Dashboard"/>
   )
 }
 
