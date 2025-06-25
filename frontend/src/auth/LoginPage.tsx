@@ -80,7 +80,7 @@ const LoginPage = () => {
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 hover:text-gray-700 "
                 aria-label={showPassword ? "Hide password" : "Show password"}>
-                {showPassword ? <EyeSlashIcon className="h-5 w-5 bg-red-800 " /> : <EyeIcon className="h-5 w-5" />}
+                {showPassword ? <EyeSlashIcon className="h-5 w-5 " /> : <EyeIcon className="h-5 w-5" />}
               </button>
             </div>
           </div>
