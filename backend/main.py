@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import auth.auth_api
-from api import api
-from api import sales_api
+from api import api,sales_api,daily
 
 app = FastAPI(
     title="Daily Sales API",
@@ -29,6 +28,7 @@ app.add_middleware(
 app.include_router(auth.auth_api.router)
 app.include_router(api.router)    
 app.include_router(sales_api.router)
+app.include_router(daily.router)
 
 # Root route
 @app.get("/")

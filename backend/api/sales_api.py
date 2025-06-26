@@ -74,6 +74,15 @@ def get_retail_partners(db: Session = Depends(get_db)):
     # Pydantic's `model_validate` handles the mapping including the merchandiser list
     return [RetailPartnerResponse.model_validate(p) for p in partners_db]
 
+@router.get("/retail-partners/{id}", response_model=List[RetailPartnerResponse], tags=["Retail Partners"])
+def get_retail_partners(id:int,db: Session = Depends(get_db)):
+    """Retrieves all retail partners with their associated merchandisers."""
+    partners_db = db.query(models.RetailPartner).options(
+        selectinload(models.RetailPartner.merchandisers)
+    ).filter_by(id=id).all()
+    # Pydantic's `model_validate` handles the mapping including the merchandiser list
+    return [RetailPartnerResponse.model_validate(p) for p in partners_db]
+
 @router.post("/retail-partners", response_model=RetailPartnerResponse, status_code=fastapi_status.HTTP_201_CREATED, tags=["Retail Partners"])
 def create_retail_partner(req: CreateRetailRequest, db: Session = Depends(get_db)):
     """Creates a new retail partner."""
@@ -358,6 +367,7 @@ def get_daily_sales_reports(
     merchandiser_id: Optional[int] = None,
     retail_partner_id: Optional[int] = None,
     report_date: Optional[date] = None,
+    saleid: Optional[int] = None,
 ):
     """
     Retrieves daily sales reports with full details.
@@ -377,6 +387,8 @@ def get_daily_sales_reports(
         query = query.filter(models.DailySalesReport.retail_partner_id == retail_partner_id)
     if report_date is not None:
         query = query.filter(models.DailySalesReport.report_date == report_date)
+    if saleid is not None:
+        query = query.filter(models.DailySalesReport.id == saleid)
 
     # Eagerly load related data for efficiency and order the results
     reports_db = query.options(
