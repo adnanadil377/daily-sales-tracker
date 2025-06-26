@@ -1,8 +1,9 @@
 import PageContainer from "@/pages/components/pagecontainer/PageContainer";
 import { retailPartners, type RetailPartner } from "../../../../../data";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { dailySalesReports, type DailySalesReport } from "../../../../../data"; // adjust import path
+import api from "@/axiosInstance";
 
 const SalesReport: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +15,15 @@ const SalesReport: React.FC = () => {
   );
 
   const navigate = useNavigate();
+  useEffect(()=>{
+    api.get("/sales/daily-sales-reports")
+    .then(response=>{
+      console.log(response.data)
+    })
+    .catch(error=>{
+      console.log(error)
+    })
+  },[])
 
   if (!partner) {
     return <div className="p-4 text-red-600">No merchandiser found with ID: {id}</div>;

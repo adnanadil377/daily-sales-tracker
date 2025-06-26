@@ -23,46 +23,68 @@ const Units: React.FC = () => {
   const [retail, setRetail] = useState([])
   const [storeName, setStoreName] = useState("");
   const [location, setLocation] = useState("");
+  const [error, setError] = useState<string>("");
 
   const navigate = useNavigate( );
   const handleRowClick = (partner: RetailPartner)=>{
     navigate(`/units/merchandiser/${partner.id}/sales`)
   }
-  useEffect(()=>{
-    api.get('http://127.0.0.1:8000/sales/retail-partners')
-    .then(response=>{
-      console.log(response.data)
-      setRetail(response.data)
-    })
-    .catch(err=>{
-      console.log(err.data)
-    })
-  },[])
+  useEffect(() => {
+    api.get('/sales/retail-partners')
+      .then(response => {
+        setRetail(response.data);
+        setError(""); // Clear error on success
+      })
+      .catch(err => {
+        // Try to extract a meaningful error message
+        let message = "Failed to fetch retail partners.";
+        if (err.response && err.response.data && err.response.data.detail) {
+          message = err.response.data.detail;
+        } else if (err.message) {
+          message = err.message;
+        }
+        setError(message);
+      });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await api.post("http://127.0.0.1:8000/sales/retail-partners", {
-        "name":storeName,
-        "location":location,
+      const response = await api.post("/sales/retail-partners", {
+        "name": storeName,
+        "location": location,
       });
       console.log("Store saved:", response.data);
-      // Optionally reset form
-      setStoreName("");
-      setLocation("");
-    } catch (error) {
-      console.error("Error saving store:", error);
+      setError(""); // Clear error on success
+      // Optionally, refresh the list after adding
+      api.get('/sales/retail-partners')
+        .then(response => setRetail(response.data))
+        .catch(() => {}); // Ignore error here
+    } catch (err: any) {
+      let message = "Error saving store.";
+      if (err.response && err.response.data && err.response.data.detail) {
+        message = err.response.data.detail;
+      } else if (err.message) {
+        message = err.message;
+      }
+      setError(message);
     }
   };
 
   return (
     <PageContainer title="Retail Partner">
       <div className="p-4">
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded border border-red-300">
+            {error}
+          </div>
+        )}
         <div className="flex py-2 rounded-xl mb-4 justify-between">
           <div className="text-lg font-semibold text-neutral-800 tracking-tight border-l-2 border-green-500 bg-gradient-to-r from-gray-500/5 to-transparent rounded-lg py-2 pl-4">
             All Partners {" "}
             <span className="">
-              # {retailPartners.length}
+              # {retail.length}
             </span>
           </div>
           <button
