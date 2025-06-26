@@ -1,49 +1,97 @@
 import PageContainer from "@/pages/components/pagecontainer/PageContainer";
-import { retailPartners, type RetailPartner } from "../../../../../data";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { dailySalesReports, type DailySalesReport } from "../../../../../data"; // adjust import path
 import api from "@/axiosInstance";
 
+type SalesReportData = {
+  salesId: number;
+  retailPartnerId: number;
+  merchandiserName: string;
+  reportDate: string;
+  totalQuantity: number;
+  totalSales: number;
+  finalValue: number;
+  status: 'pending' | 'approved' | 'rejected'; // Example statuses
+};
+
+type RetailPartner = {
+  name: string;
+  location: string;
+};
+
 const SalesReport: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const merchId = parseInt(id || "", 10);
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
 
-  const partner: RetailPartner | undefined = retailPartners.find((p) => p.id === merchId);
-  const partnerReports: DailySalesReport[] = dailySalesReports.filter(
-    (report) => report.retailPartnerId === partner?.id
-  );
+        // State for data, loading, and error handling
+    const [reports, setReports] = useState<SalesReportData[]>([]);
+    const [retail, setRetail] = useState<RetailPartner[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+  
+    useEffect(()=>{
+        if (!id) {
+            setError("Partner ID is missing.");
+            setLoading(false);
+            return;
+        }
+        api.get("/sales/daily-sales-reports", {
+        params: {
+            retail_partner_id: id,
+        },
+        })
+        .then(response => {
+            setReports(response.data);
+            setError(null);
+        })
+        .catch(error => {
+            console.error("Failed to fetch sales reports:", error);
+            setError(error.message || "An unknown error occurred.");
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+        api.get(`/sales/retail-partners/${id}`)
+        .then(response => {
+            setRetail(response.data);
+            console.log(response.data);
+            setError(null);
+        })
+        .catch(error => {
+            console.error("Failed to fetch sales reports:", error);
+            setError(error.message || "An unknown error occurred.");
+        })
+        .finally(() => {
+            setLoading(false);
+        });
 
-  const navigate = useNavigate();
-  useEffect(()=>{
-    api.get("/sales/daily-sales-reports")
-    .then(response=>{
-      console.log(response.data)
-    })
-    .catch(error=>{
-      console.log(error)
-    })
-  },[])
+    }, [id]);
+    if (loading) {
+        return <div className="p-4 text-center">Loading sales reports...</div>;
+    }
 
-  if (!partner) {
-    return <div className="p-4 text-red-600">No merchandiser found with ID: {id}</div>;
-  }
+    // 2. Handle Error State
+    if (error) {
+        return <div className="p-4 text-red-600 text-center">Error: {error}</div>;
+    }
 
-  const handleRowClick = (report: DailySalesReport) => {
-    navigate(`/units/merchandiser/${partner.id}/sales/${report.Salesid}/dailysales`);
-  };
-
-  if (!partner) {
-    return <div className="p-4 text-red-600">No merchandiser found with ID: {id}</div>;
-  }
-
+    // 3. Handle Empty State (No reports found for this partner)
+    if (reports.length === 0) {
+        return <div className="p-4 text-gray-600 text-center">No sales reports found for partner ID: {id}</div>;
+    }
+    
+    // Navigate to the detailed view for a specific report
+    const handleRowClick = (report: SalesReportData) => {
+        // Use the `id` from the URL params for consistency
+        navigate(`/units/merchandiser/${id}/sales/${report.salesId}/dailysales`);
+    };
   return (
-    <PageContainer title={`Sales Report #${partner.id}`}>
+    <PageContainer title={`Sales Report #${reports[0]?.retailPartnerId}`}>
       <div className="p-4">
-        <h1 className="text-2xl border-l-2 pl-4 py-1 z-10 border-green-500 bg-gradient-to-r from-gray-500/5 via-transparent to-transparent font-semibold rounded"> {partner.merchandiser}</h1>
+        <h1 className="text-2xl border-l-2 pl-4 py-1 z-10 border-green-500 bg-gradient-to-r from-gray-500/5 via-transparent to-transparent font-semibold rounded"> {reports[0].merchandiserName}</h1>
         <p className="text-lg">
-          <span className="text-xs">{partner.store}</span> –{" "}
-          <span className="text-xs">{partner.location}</span>
+          <span className="text-xs">{retail[0]?.name}</span> –{" "}
+          <span className="text-xs">{retail[0]?.location}</span>
         </p>
 
         {/*Desktop Table */}
@@ -60,13 +108,13 @@ const SalesReport: React.FC = () => {
             </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-            {partnerReports.map((report) => (
+            {reports.map((report) => (
                 <tr
-                key={report.Salesid}
+                key={report.salesId}
                 onClick={() => handleRowClick(report)}
                 className="hover:bg-gray-100 transition-colors cursor-pointer"
                 >
-                <td className="px-6 py-4 text-sm text-gray-700">SO #{report.Salesid}</td>
+                <td className="px-6 py-4 text-sm text-gray-700">SO #{report.salesId}</td>
                 <td className="px-6 py-4 text-sm text-gray-700">
                     {new Date(report.reportDate).toLocaleDateString("en-US", {
                     year: "numeric",
@@ -85,15 +133,15 @@ const SalesReport: React.FC = () => {
         </div>
         {/*mobile view*/}
         <div className="md:hidden mt-6 space-y-4">
-        {partnerReports.map((report) => (
+        {reports.map((report) => (
             <div
-            key={report.Salesid}
+            key={report.salesId}
             onClick={() => handleRowClick(report)}
             className="p-4 rounded-xl shadow  shadow-red-500/10 bg-gradient-to-br from-white to-blue-50/35 transition hover:shadow-lg cursor-pointer"
             >
             {/* Header */}
             <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
-                <h3 className="font-semibold text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">SO # {report.Salesid}</h3>
+                <h3 className="font-semibold text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">SO # {report.salesId}</h3>
                 <span className="text-xs text-gray-500">
                 {new Date(report.reportDate).toLocaleDateString("en-US", {
                     year: "numeric",
