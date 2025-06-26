@@ -1,17 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageContainer from "@/pages/components/pagecontainer/PageContainer";
 import { retailPartners } from "../../../../data";
-import type { RetailPartner } from "../../../../data";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/pages/components/Modal/Modal";
+import axios from "axios";
+
+
+interface Merchandiser {
+  id: number;
+  name: string;
+}
+
+interface RetailPartner {
+  id: number;
+  name: string;
+  location: string;
+  merchandisers: Merchandiser[];
+}
 
 const Units: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [retail, setRetail] = useState([])
+  const [storeName, setStoreName] = useState("");
+  const [location, setLocation] = useState("");
 
   const navigate = useNavigate( );
   const handleRowClick = (partner: RetailPartner)=>{
     navigate(`/units/merchandiser/${partner.id}/sales`)
   }
+  useEffect(()=>{
+    axios.get('http://127.0.0.1:8000/sales/retail-partners')
+    .then(response=>{
+      console.log(response.data)
+      setRetail(response.data)
+    })
+    .catch(err=>{
+      console.log(err.data)
+    })
+  },[])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/sales/retail-partners", {
+        "name":storeName,
+        "location":location,
+      });
+      console.log("Store saved:", response.data);
+      // Optionally reset form
+      setStoreName("");
+      setLocation("");
+    } catch (error) {
+      console.error("Error saving store:", error);
+    }
+  };
 
   return (
     <PageContainer title="Retail Partner">
@@ -36,21 +78,20 @@ const Units: React.FC = () => {
          isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <h2 className="text-lg font-semibold mb-4">Add New Partner</h2>
           {/* Your form inputs can go here */}
-          <form className="space-y-4">
-            <input
-              type="text"
-              placeholder="Merchandiser"
-              className="w-full border px-3 py-2 rounded"
-            />
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Store Name"
               className="w-full border px-3 py-2 rounded"
+              value={storeName}
+              onChange={(e) => setStoreName(e.target.value)}
             />
             <input
               type="text"
               placeholder="Location"
               className="w-full border px-3 py-2 rounded"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
             <button
               type="submit"
@@ -80,7 +121,7 @@ const Units: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {retailPartners.map((partner: RetailPartner) => (
+              {retail.map((partner: RetailPartner) => (
                 <tr
                   key={partner.id}
                   className="hover:bg-gray-100 transition-colors"
@@ -90,10 +131,20 @@ const Units: React.FC = () => {
                     {partner.id}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {partner.merchandiser}
+                    {partner.merchandisers && partner.merchandisers.length > 0 ? (
+                      <div>
+                        {partner.merchandisers.map((merchandiser: Merchandiser) => (
+                          <div key={merchandiser.id}>
+                            {merchandiser?.name || "N/A"}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 italic">N/A</div>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {partner.store}
+                    {partner.name}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {partner.location}
@@ -105,7 +156,7 @@ const Units: React.FC = () => {
           </div>
           {/* Mobile View*/}
         <div className="md:hidden mt-6 space-y-5">
-          {retailPartners.map((partner: RetailPartner) => (
+          {retail.map((partner: RetailPartner) => (
             <div
               key={partner.id}
               onClick={() => handleRowClick(partner)}
@@ -117,7 +168,7 @@ const Units: React.FC = () => {
                   Store ID: {partner.id}
                 </div>
                 <div className="text-sm font-bold text-gray-800 truncate">
-                  {partner.store}
+                  {partner.name}
                 </div>
               </div>
 
@@ -125,7 +176,20 @@ const Units: React.FC = () => {
                 {/* Merchandiser */}
                 <div>
                   <div className="text-gray-500 font-medium"> Merchandiser</div>
-                  <div className="font-semibold truncate">{partner.merchandiser}</div>
+                  {/* <div className="font-semibold truncate">{partner.merchandisers[0]?.name || "N/A"}</div> */}
+                  <div>
+                    {partner.merchandisers && partner.merchandisers.length > 0 ? (
+                      <div>
+                        {partner.merchandisers.map((merchandiser: Merchandiser) => (
+                          <div key={merchandiser.id}>
+                            {merchandiser?.name || "N/A"}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 italic">N/A</div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Location */}
