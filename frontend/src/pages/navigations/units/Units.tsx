@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PageContainer from "@/pages/components/pagecontainer/PageContainer";
-import { retailPartners } from "../../../../data";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/pages/components/Modal/Modal";
 import api from "@/axiosInstance";
