@@ -3,7 +3,7 @@ import PageContainer from "@/pages/components/pagecontainer/PageContainer";
 import { retailPartners } from "../../../../data";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/pages/components/Modal/Modal";
-import axios from "axios";
+import api from "@/axiosInstance";
 
 
 interface Merchandiser {
@@ -29,7 +29,7 @@ const Units: React.FC = () => {
     navigate(`/units/merchandiser/${partner.id}/sales`)
   }
   useEffect(()=>{
-    axios.get('http://127.0.0.1:8000/sales/retail-partners')
+    api.get('http://127.0.0.1:8000/sales/retail-partners')
     .then(response=>{
       console.log(response.data)
       setRetail(response.data)
@@ -42,7 +42,7 @@ const Units: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/sales/retail-partners", {
+      const response = await api.post("http://127.0.0.1:8000/sales/retail-partners", {
         "name":storeName,
         "location":location,
       });
