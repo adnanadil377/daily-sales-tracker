@@ -16,7 +16,7 @@ interface DailySalesReport {
   totalSales: number;
   finalValue: number;
   reportDate: Date; // ISO date string: "YYYY-MM-DD"
-  status: 'submitted' | 'pending' | 'approved';
+  status: 'submitted' | 'pending' | 'approved' | 'rejected';
   notes: string;
   submittedAt: string; // ISO date-time string
 }

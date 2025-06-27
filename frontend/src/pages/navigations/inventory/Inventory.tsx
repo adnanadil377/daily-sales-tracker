@@ -2,6 +2,29 @@ import PageContainer from "@/pages/components/pagecontainer/PageContainer";
 import { inventories } from "../../../../data";
 import { useNavigate } from "react-router-dom";
 import type { InventoryItem } from "data";
+import { useEffect, useState } from "react";
+import api from "@/axiosInstance";
+
+interface StoreInventory {
+  retailPartnerId: number;
+  storeName: string;
+  products: InventoryDetail[];
+}
+interface InventoryDetail {
+  productId: number;
+  productName: string;
+  category: string;
+  quantity: number;
+  unitSellingPrice: number;
+  totalValue: number;
+}
+
+export interface InventoryItem {
+  retailPartnerId: number;
+  storeName: string;
+  totalQuantity: number;
+  totalValue: number;
+}
 
 const InventorySummary = ({ inventories }: { inventories: InventoryItem[] }) => {
   const totalQuantity = inventories.reduce((total, p) => total + p.totalQuantity, 0);
@@ -49,10 +72,34 @@ const MobileInventoryCard = ({
 
 const Inventory = () => {
   const navigate = useNavigate();
+  const [inventories, setInventories] = useState<InventoryItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleRowClick = (retailPartnerId: number) => {
     navigate(`/inventory/retailor/${retailPartnerId}/sales`);
   };
+
+  useEffect(()=>{
+    api.get('/sales/inventory/summary')
+    .then(response=>{
+      console.log(response.data)
+      setInventories(response.data)
+    })
+    .catch(err=>{
+      console.log(err)
+      setError(err.message)
+    })
+    .finally(()=>{
+      setLoading(false)
+    })
+  },[])
+  if (loading) {
+        return <div className="p-4 text-center">Loading sales reports...</div>;
+    }
+  if (error) {
+    return <div className="p-4 text-red-600">{error}</div>;
+  }
 
   return (
     <PageContainer title="Inventory">

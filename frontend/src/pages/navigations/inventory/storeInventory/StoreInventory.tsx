@@ -1,48 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageContainer from "@/pages/components/pagecontainer/PageContainer";
-import { InventoryDetailsByStore } from "../../../../../data";
+import api from "@/axiosInstance";
+
+
+interface StoreInventory {
+  retailPartnerId: number;
+  storeName: string;
+  products: InventoryDetail[];
+}
+interface InventoryDetail {
+  productId: number;
+  productName: string;
+  category: string;
+  quantity: number;
+  unitSellingPrice: number;
+  totalValue: number;
+}
 
 const RetailorInventorySales: React.FC = () => {
   const { retailPartnerId } = useParams<{ retailPartnerId: string }>();
-  const storeInventory = InventoryDetailsByStore.find(
-    (store) => store.retailPartnerId === Number(retailPartnerId)
-  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [storeInventory, setStoreInventory] = useState<StoreInventory[]>([]);
 
-  if (!storeInventory) {
-    return (
-      <PageContainer title="Store Inventory">
-        <p className="text-red-500 text-sm mt-4">Store not found.</p>
-      </PageContainer>
-    );
+
+  useEffect(()=>{
+    if(!retailPartnerId){
+      setError("Partner ID is missing.");
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    api.get(`/sales/inventory/${retailPartnerId}`)
+      .then((response) => {
+        console.log(response.data);
+        setStoreInventory(response.data);
+        setError(null);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch sales reports:", error);
+        setError(error.message || "An unknown error occurred.");
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+  },[])
+  if (loading) {
+        return <div className="p-4 text-center">Loading sales reports...</div>;
+    }
+  if (error) {
+    return <div className="p-4 text-red-600">{error}</div>;
   }
-
   return (
     <PageContainer title="Inventory Overview">
       <div className="p-4 space-y-4 ">
         {/* Header */}
         <div className="hidden md:block">
           <h2 className="text-xl font-semibold border-l-2 pl-4 py-1 border-green-500 bg-gradient-to-r from-gray-500/5 to-transparent rounded">
-            {storeInventory.storeName}
+            {storeInventory[0]?.storeName}
           </h2>
-          <p className="text-sm text-gray-600 pt-2">Total Products: {storeInventory.products.length}</p>
+          <p className="text-sm text-gray-600 pt-2">Total Products: {storeInventory[0].products.length}</p>
         </div>
         <div className="md:hidden flex justify-between border-l-2 pl-4 pb-4 border-green-500 bg-gradient-to-r from-gray-500/5 to-transparent rounded">
             <div className="mt-6 text-sm text-gray-700">
                 <h2 className="text-xl font-semibold">
-            {storeInventory.storeName}
+            {storeInventory[0].storeName}
           </h2>
           <p>
             Total Quantity:{" "}
             <strong>
-              {storeInventory.products.reduce((total, p) => total + p.quantity, 0)}
+              {storeInventory[0].products.reduce((total, p) => total + p.quantity, 0)}
             </strong>
           </p>
           <p>
             Total Inventory Value:{" "}
             <strong>
               QAR{" "}
-              {storeInventory.products
+              {storeInventory[0].products
                 .reduce((total, p) => total + p.totalValue, 0)
                 .toFixed(2)}
             </strong>
@@ -63,7 +98,7 @@ const RetailorInventorySales: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {storeInventory.products.map((product, index) => (
+              {storeInventory[0].products.map((product, index) => (
                 <tr key={index}>
                   <td className="px-6 py-4 text-sm text-gray-700">{product.productName}</td>
                   <td className="px-6 py-4 text-sm text-gray-700">{product.category}</td>
@@ -78,7 +113,7 @@ const RetailorInventorySales: React.FC = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-4">
-          {storeInventory.products.map((product, index) => (
+          {storeInventory[0].products.map((product, index) => (
             <div
               key={index}
               className="p-4 rounded-xl shadow shadow-red-500/10 bg-gradient-to-br from-white to-blue-50/30 transition hover:shadow-md"
@@ -115,14 +150,14 @@ const RetailorInventorySales: React.FC = () => {
           <p>
             Total Quantity:{" "}
             <strong>
-              {storeInventory.products.reduce((total, p) => total + p.quantity, 0)}
+              {storeInventory[0].products.reduce((total, p) => total + p.quantity, 0)}
             </strong>
           </p>
           <p>
             Total Inventory Value:{" "}
             <strong>
               QAR{" "}
-              {storeInventory.products
+              {storeInventory[0].products
                 .reduce((total, p) => total + p.totalValue, 0)
                 .toFixed(2)}
             </strong>
