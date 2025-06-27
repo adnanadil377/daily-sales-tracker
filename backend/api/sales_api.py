@@ -79,7 +79,7 @@ def get_retail_partners(id:int,db: Session = Depends(get_db)):
     """Retrieves all retail partners with their associated merchandisers."""
     partners_db = db.query(models.RetailPartner).options(
         selectinload(models.RetailPartner.merchandisers)
-    ).filter_by(id=id).all()
+    ).filter_by(id==id).all()
     # Pydantic's `model_validate` handles the mapping including the merchandiser list
     return [RetailPartnerResponse.model_validate(p) for p in partners_db]
 
@@ -360,10 +360,15 @@ class DailySalesReportResponse(APIBaseModel):
     def final_value_after_discount(self) -> float:
         return round(sum(item.final_price for item in self.data), 2)
 
+class UpdateDaiyThreadRequest(APIBaseModel):
+    id: int = Field(alias="salesId")
+    status: Literal['approved', 'rejected'] = 'pending'
+
 # --- Daily Sales Endpoints ---
 @router.get('/daily-sales-reports', response_model=List[DailySalesReportResponse], tags=["Daily Sales"])
 def get_daily_sales_reports(
     db: Session = Depends(get_db),
+    status: Optional[Literal['submitted', 'pending', 'approved', 'rejected']] = None,
     merchandiser_id: Optional[int] = None,
     retail_partner_id: Optional[int] = None,
     report_date: Optional[date] = None,
@@ -389,6 +394,8 @@ def get_daily_sales_reports(
         query = query.filter(models.DailySalesReport.report_date == report_date)
     if saleid is not None:
         query = query.filter(models.DailySalesReport.id == saleid)
+    if status is not None:
+        query = query.filter(models.DailySalesReport.status == status)
 
     # Eagerly load related data for efficiency and order the results
     reports_db = query.options(
@@ -455,6 +462,74 @@ def create_daily_sales_report(req: DailySalesReportCreate, db: Session = Depends
         db.refresh(item, attribute_names=['product'])
         
     # Manually construct the response to ensure all fields are correctly populated
+    items_response = [
+        DailySalesItemResponse(
+            productId=item.product_id,
+            productName=item.product.name if item.product else "N/A",
+            quantitySold=item.quantity_sold,
+            salesPrice=item.unit_price,
+            discountPercent=item.discount_percent
+        ) for item in report_db.sales_items
+    ]
+    return DailySalesReportResponse(
+        salesId=report_db.id,
+        data=items_response,
+        merchandiserId=report_db.merchandiser_id,
+        merchandiserName=report_db.merchandiser.name if report_db.merchandiser else "Unknown Merchandiser",
+        retailPartnerId=report_db.retail_partner_id,
+        reportDate=report_db.report_date,
+        status=report_db.status,
+        notes=report_db.notes,
+        submittedAt=report_db.submitted_at
+    )
+
+@router.put('/daily-status',tags=["Daily Sales"])
+def update_daily_status(threadup:UpdateDaiyThreadRequest,db:Session=Depends(get_db)):
+    sales=db.query(models.DailySalesReport).filter(models.DailySalesReport.id==threadup.id).first()
+    if not sales:
+        raise HTTPException(status_code=fastapi_status.HTTP_404_NOT_FOUND, detail="sales not found")
+    sales.status=threadup.status
+    db.commit()
+    db.refresh(sales)
+    return sales
+
+
+class UpdateReportStatusRequest(BaseModel):
+    """Request model to update the status of a sales report."""
+    status: Literal['approved', 'rejected']
+
+# ... (keep all your existing endpoints)
+
+
+# --- Add this new endpoint to update a report's status ---
+@router.patch('/daily-sales-reports/{report_id}', response_model=DailySalesReportResponse, tags=["Daily Sales"])
+def update_sales_report_status(
+    report_id: int,
+    req: UpdateReportStatusRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Updates the status of a specific daily sales report to 'approved' or 'rejected'.
+    """
+    report_db = db.query(models.DailySalesReport).filter(models.DailySalesReport.id == report_id).first()
+
+    if not report_db:
+        raise HTTPException(
+            status_code=fastapi_status.HTTP_404_NOT_FOUND,
+            detail=f"Sales report with ID {report_id} not found."
+        )
+
+    # Update the status
+    report_db.status = req.status
+    db.commit()
+    db.refresh(report_db)
+
+    # --- Manually construct the response (copied from your GET endpoint) ---
+    # This is needed because the response model has computed fields and specific structures.
+    db.refresh(report_db, attribute_names=['sales_items', 'merchandiser'])
+    for item in report_db.sales_items:
+        db.refresh(item, attribute_names=['product'])
+
     items_response = [
         DailySalesItemResponse(
             productId=item.product_id,
